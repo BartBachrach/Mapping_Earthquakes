@@ -2,6 +2,10 @@
 *.class
 
 # Log file
+
+#ignore config
+config.js
+
 *.log
 
 # BlueJ files
