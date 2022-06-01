@@ -6,7 +6,7 @@ let map = L.map("mapid").setView([40.7, -94.5], 4); // the 4 outside the lat/lon
 // setting the map object (L.map()), referencing "#mapid" in the html file, to the variable "map"
 // setView establishes the default center of our map, which takes in the arguments for where (lat/lon array) and how much zoom (4/18 in this case)
 
-// an alternative is using curly brace notation, which is useful when the map starts to include many layers
+//an alternative is using curly brace notation, which is useful when the map starts to include many layers
 // let map = L.map("mapid", {
 //     center: [40.7, -94.5
 //     ],

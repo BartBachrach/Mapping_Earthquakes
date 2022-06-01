@@ -2,9 +2,29 @@
 console.log("working");
 
 // Create the map object with a center and a zoom level
-let map = L.map("mapid").setView([34.0522, -118.2437], 4); // the 4 outside the lat/lon array is the zoom level on a scale of 0-18
+let map = L.map("mapid").setView([37.6213, -122.3790], 3); // the 4 outside the lat/lon array is the zoom level on a scale of 0-18
 // setting the map object (L.map()), referencing "#mapid" in the html file, to the variable "map"
 // setView establishes the default center of our map, which takes in the arguments for where (lat/lon array) and how much zoom (4/18 in this case)
+// let line = [
+//     [33.9416, -118.4085],
+//     [37.6213, -122.3790],
+//     [40.7899, -111.9791],
+//     [47.4502, -122.3088]
+// ];
+
+let line = [
+    [37.6213, -122.3790],
+    [30.1975, -97.6664],
+    [43.6777, -79.6248],
+    [40.6413, -73.7781]
+];
+
+
+// Create a polyline using the line coordinates and make the line red
+L.polyline(line, {
+    color: "blue",
+    opacity: 0.5,
+}).addTo(map);
 
 // an alternative is using curly brace notation, which is useful when the map starts to include many layers
 // let map = L.map("mapid", {
@@ -28,22 +48,23 @@ let map = L.map("mapid").setView([34.0522, -118.2437], 4); // the 4 outside the 
 let cityData = cities;
 
 // next we'll iterate through the cities array of objects and add markers at those locations
-cityData.forEach(function(city){
-    console.log(city)
-    L.circleMarker(city.location, {
-        stroke: true,
-        color: "#FFA500",
-        radius: city.population/100000,
-        fillColor: "#FFA500"
+// cityData.forEach(function(city){
+//     console.log(city)
+//     L.circleMarker(city.location, {
+//         stroke: true,
+//         lineWeight: 4,
+//         color: "#FFA500",
+//         radius: city.population/100000,
+//         fillColor: "#FFA500"
 
         
-    })
-        .bindPopup("<h2>" + city.city + "," + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
-    .addTo(map);
-});
+//     })
+//         .bindPopup("<h2>" + city.city + "," + city.state + "</h2> <hr> <h3>Population " + city.population.toLocaleString() + "</h3>")
+//     .addTo(map);
+// });
 
 // add tile layer to our map
-let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18, // sets the maximum zoom level
     accessToken: API_KEY // adds our API key to the access token
