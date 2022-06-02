@@ -106,57 +106,63 @@ console.log("working");
 // });
 
 // add tile layer to our map
-let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18, // sets the maximum zoom level
     accessToken: API_KEY // adds our API key to the access token
 });
 
 // We create the dark view tile layer that will be an option for our map.
-let dark = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/dark-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
-attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+let satelliteStreets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     accessToken: API_KEY
 });
 
 let baseMaps = {
-    Light: light, // we're storing the the two different map options in a variable to access later
-    Dark: dark
+    "Streets": streets, // we're storing the the two different map options in a variable to access later
+    "Satellite Streets": satelliteStreets
 };
 
 let map = L.map("mapid", {
     center: [44.0, -80.0],
-    zoom: 2,
-    layers: [light]
+    zoom: 11,
+    layers: [streets]
 });
 
 // pass our map layers into our layers control and add the layers control to the map
 L.control.layers(baseMaps).addTo(map); // here we've called the the baseMaps variable and added it to our map
 
-// accessing the airport geoJSON URL
-let airportData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/majorAirports.json";
+let torontoHoods = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/torontoNeighborhoods.json";
 
-let torontoData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/torontoRoutes.json";
+// accessing the airport geoJSON URL
+// let airportData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/majorAirports.json";
+
+// let torontoData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/torontoRoutes.json";
 
 // create style for the lines
 let myStyle = {
-    color: "#ffffa1",
-    weight: 2
+    color: "blue",
+    fillColor: "yellow",
+    weight: 1
 }
 
 // grabbing geoJSON data
-d3.json(torontoData).then(function(data) {
+d3.json(torontoHoods).then(function(data) {
     console.log(data);
     // creating a geoJSON layer with the retrieved data
     L.geoJSON(data, {
         style: myStyle,
         onEachFeature: function(feature, layer) {
-            layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr><h3> Destination: "
-            + feature.properties.dst + "</h3>");
-        } // the above code is how to add info to a popup from an external JSON file
+            layer.bindPopup("<h3> Neighborhood: " + feature.properties.AREA_NAME + "</h3>");
+        }
     }).addTo(map);
 });
 
 // then we'll add our 'graymap' tile layer to the map
-light.addTo(map); // this will add the graymap object tile layer to our variable "map"
+streets.addTo(map); // this will add the graymap object tile layer to our variable "map"
 
+// onEachFeature: function(feature, layer) {
+//     layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr><h3> Destination: "
+//     + feature.properties.dst + "</h3>");
+// the above code is how to add info to a popup from an external JSON file
