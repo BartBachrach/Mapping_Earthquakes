@@ -106,7 +106,7 @@ console.log("working");
 // });
 
 // add tile layer to our map
-let streets = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+let light = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/light-v10/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18, // sets the maximum zoom level
     accessToken: API_KEY // adds our API key to the access token
@@ -120,14 +120,14 @@ attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap
 });
 
 let baseMaps = {
-    Street: streets, // we're storing the the two different map options in a variable to access later
+    Light: light, // we're storing the the two different map options in a variable to access later
     Dark: dark
 };
 
 let map = L.map("mapid", {
-    center: [30, 30],
+    center: [44.0, -80.0],
     zoom: 2,
-    layers: [streets]
+    layers: [light]
 });
 
 // pass our map layers into our layers control and add the layers control to the map
@@ -136,13 +136,27 @@ L.control.layers(baseMaps).addTo(map); // here we've called the the baseMaps var
 // accessing the airport geoJSON URL
 let airportData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/majorAirports.json";
 
+let torontoData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/torontoRoutes.json";
+
+// create style for the lines
+let myStyle = {
+    color: "#ffffa1",
+    weight: 2
+}
+
 // grabbing geoJSON data
-d3.json(airportData).then(function(data) {
+d3.json(torontoData).then(function(data) {
     console.log(data);
     // creating a geoJSON layer with the retrieved data
-    L.geoJSON(data).addTo(map).bindPopup() 
+    L.geoJSON(data, {
+        style: myStyle,
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup("<h3> Airline: " + feature.properties.airline + "</h3> <hr><h3> Destination: "
+            + feature.properties.dst + "</h3>");
+        } // the above code is how to add info to a popup from an external JSON file
+    }).addTo(map);
 });
 
 // then we'll add our 'graymap' tile layer to the map
-streets.addTo(map); // this will add the graymap object tile layer to our variable "map"
+light.addTo(map); // this will add the graymap object tile layer to our variable "map"
 
