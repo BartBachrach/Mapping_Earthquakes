@@ -210,7 +210,41 @@ d3.json(quakeData).then(function(data) {
     }).addTo(earthquakes); // adding this part to the earthquakes layer
     // adding the earthquakes layer to the map
     earthquakes.addTo(map);
+
+    let legend = L.control({
+        position: 'bottomright'
+    });
+
+    legend.onAdd = function () {
+
+        let div = L.DomUtil.create('div', 'info legend');
+        let magnitudes = [0, 1, 2, 3, 4, 5];
+
+        let colors = [
+            "#98ee00",
+            "#d4ee00",
+            "#eecc00",
+            "#ee9c00",
+            "#ea822c",
+            "#ed2c2c"
+        ];
+        };
+    
+    
+    
+    
+    // loop through our density intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < magnitudes.length; i++) {
+        console.log(colors[i]);
+        div.innerHTML +=
+            '<i style="background:' + colors[i] + '"></i> ' +
+            magnitudes[i] + (magnitudes[i + 1] ? '&ndash;' + magnitudes[i + 1] + '<br>' : '+');
+    }
+    return div;
 });
+
+legend.addTo(map);
+
 
 // then we'll add our 'graymap' tile layer to the map
 streets.addTo(map); // this will add the graymap object tile layer to our variable "map"
