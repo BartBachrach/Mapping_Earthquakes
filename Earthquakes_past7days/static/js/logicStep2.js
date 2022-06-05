@@ -133,7 +133,7 @@ let map = L.map("mapid", {
 // pass our map layers into our layers control and add the layers control to the map
 L.control.layers(baseMaps).addTo(map); // here we've called the the baseMaps variable and added it to our map
 
-let quakeMap = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
+let quakeData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geojson";
 
 // accessing the airport geoJSON URL
 // let airportData = "https://raw.githubusercontent.com/BartBachrach/Mapping_Earthquakes/main/majorAirports.json";
@@ -147,15 +147,36 @@ let myStyle = {
     weight: 1
 }
 
+
+
 // grabbing geoJSON data
-d3.json(quakeMap).then(function(data) {
+d3.json(quakeData).then(function(data) {
     console.log(data);
+    function styleInfo(feature) {
+        return {
+          opacity: 1,
+          fillOpacity: 1,
+          fillColor: "#ffae42",
+          color: "#000000",
+          radius: getRadius(feature.properties.mag),
+          stroke: true,
+          weight: 0.5
+        };
+    }
+    function getRadius(magnitude) {
+        if (magnitude === 0) {
+            return 1;
+        }
+        return magnitude * 4;
+    }
+    
     // creating a geoJSON layer with the retrieved data
     L.geoJSON(data, {
-        style: myStyle,
-        onEachFeature: function(feature, layer) {
-            layer.bindPopup("<h3> Neighborhood: " + feature.properties.AREA_NAME + "</h3>");
-        }
+        pointToLayer: function(feature, latlng){
+            console.log(data);
+            return L.circleMarker(latlng);
+        },
+    style: styleInfo
     }).addTo(map);
 });
 
