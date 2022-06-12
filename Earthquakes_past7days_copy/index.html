@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earthquake Challenge</title>
+    <title>Mapping-GeoJSON-Polygons</title>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <!-- Leaflet CSS -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -12,24 +12,25 @@
     crossorigin=""/>
     <!-- Our CSS Stylesheet -->
     <link rel="stylesheet" type="text/css" href="./static/css/style.css">
-    
 </head>
 <body>
+    
     <!--the dive that holds our map-->
     <div id="mapid"></div>
-
-    <!-- Make sure you put this AFTER Leaflet's CSS -->
-    <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"
-    integrity="sha512-BB3hKbKWOc9Ez/TAwyWxNXeoV9c1v6FIeYiBieIWkpLjauysF18NzgR1MBNBXf8/KABdlkX68nAhlwcDFLGPCQ=="
-    crossorigin=""></script>
+    
+    <!-- Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>End of code snippet
 
     <!-- API Key -->
     <script type="text/javascript" src="./static/js/config.js"></script>
 
-    <!-- Our JavaScript -->
-    <script type="text/javascript" src="./static/js/logicStep5.js"></script>
-
-
+    <!--data file-->
+    <script type="text/javascript" src="./static/js/cities.js"></script>
     
+    <!-- Our JavaScript -->
+    <script type="text/javascript" src="./static/js/tectonic_plate_starter_logic.js"></script>
+
 </body>
 </html>
