@@ -112,7 +112,7 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     style: styleInfo,
      // We create a popup for each circleMarker to display the magnitude and location of the earthquake
      //  after the marker has been created and styled.
-     onEachFeature: function(feature, layer) {
+    onEachFeature: function(feature, layer) {
       layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
     }
   }).addTo(allEarthquakes);
@@ -120,6 +120,50 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
   // Then we add the earthquake layer to our map.
   allEarthquakes.addTo(map);
 
+  d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson").then(function(data) {
+
+    function styleInfo2(feature) {
+      return {
+        opacity: 1,
+        fillOpacity: 1,
+        fillColor: getColor2(feature.properties.mag),
+        color: "#000000",
+        radius: getRadius(feature.properties.mag),
+        stroke: true,
+        weight: 0.5,
+      };
+    }
+
+    function getColor2(magnitude) {
+      if (magnitude > 5) {
+        return "#ea2c2c";
+      }
+      if (magnitude > 4) {
+        return "#ea822c";
+      }
+      return "#98ee00";
+    }
+
+    function getRadius2(magnitude) {
+      if (magnitude === 0) {
+        return 1;
+      }
+      return magnitude * 4;
+    }
+
+    L.geoJson (data, {
+      pointToLayer: function(feature, latlng){
+        console.log(data);
+        return L.circleMarker(latlng);
+      },
+      style: styleInfo2,
+      onEachFeature: function(feature, layer){
+        layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
+      }
+    }).addTo(majorQuakes)
+
+  majorQuakes.addTo(map);
+  });
 
   // Here we create a legend control object.
 let legend = L.control({
@@ -130,15 +174,14 @@ let legend = L.control({
 legend.onAdd = function() {
   let div = L.DomUtil.create("div", "info legend");
 
-  const magnitudes = [0, 1, 2, 3, 4, 5, 6];
+  const magnitudes = [0, 1, 2, 3, 4, 5];
   const colors = [
     "#98ee00",
     "#d4ee00",
     "#eecc00",
     "#ee9c00",
     "#ea822c",
-    "#ea2c2c",
-    "#000000"
+    "#ea2c2c"
   ];
 
 // Looping through our intervals to generate a label with a colored square for each interval.
@@ -155,44 +198,18 @@ legend.onAdd = function() {
   legend.addTo(map);
 
 
-  d3.json("https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json").then(function(data) {
-    L.geoJSON(data, {
-      
-    }).addTo(tectonicPlates)
-    tectonicPlates.addTo(map)
-  });
-  });
-
-  d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson").then(function(data){
-    L.geoJSON(data, {
-      pointToLayer: function(feature, latlng) {
-        console.log(data);
-        return L.circleMarker(latlng);
-      }
-    })  
+  // 3. Use d3.json to make a call to get our Tectonic Plate geoJSON data.
+  let tectData = "https://raw.githubusercontent.com/fraxen/tectonicplates/master/GeoJSON/PB2002_boundaries.json";
   
-  
-    function styleInfo(feature) {
-        return {
-          opacity: 1,
-          fillOpacity: 1,
-          fillColor: getColor(feature.properties.mag),
-          color: "#000000",
-          radius: getRadius(feature.properties.mag),
-          stroke: true,
-          weight: 0.5
-        }.addTo(majorQuakes),
-        majorQuakes.addTo(map)
+  d3.json(tectData).then(function(data) {
+    console.log(data);
+       
+    L.geoJson(data, {
+      color: "red",
+      weight: 2
 
-        function getColor(magnitude){
-          if (magnitude > 4.5) {
-            return "#8B0000"
-          }
-          if (magnitude > 5.5) {
-            return "#4B0082"
-          }
-          if (magnitude > 6.5){
-            return "#000000"
-          }
-        }
-  }})
+    }).addTo(tectonicPlates);
+
+  tectonicPlates.addTo(map);
+  });
+});
